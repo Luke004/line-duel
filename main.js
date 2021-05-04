@@ -1,17 +1,22 @@
 var canvas = new Canvas(800, 600)
-var player1 = new Player("Lukas", "red", canvas.width / 2, canvas.height / 2)
 
+var players = []
+
+players.push(new Player("Lukas", "red", canvas.width / 2 - 100, canvas.height / 2))
+players.push(new Player("Lukas2", "blue", canvas.width / 2 + 100, canvas.height / 2))
 
 function update(progress) {
-    handleBorderCollisions(canvas, player1)
-    player1.update(progress)
+    players.forEach((player) => {
+        player.update(progress)
+        handleBorderCollisions(canvas, player)
+    });
 }
-
 
 function draw() {
     //ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-
-    player1.draw(canvas.ctx)
+    players.forEach((player) => {
+        player.draw(canvas.ctx)
+    });
 }
 
 function loop(timestamp) {

@@ -2,6 +2,7 @@ class Player {
 
     static defaultSpeed = 0.1
     static defaultSize = 10
+    static keyMap = 0
 
     constructor(name, color, startX, startY) {
         this.name = name
@@ -11,6 +12,8 @@ class Player {
         this.currentSpeed = Player.defaultSpeed
         this.currentSize = Player.defaultSize
         this.color = color
+        this.keyMap = Player.keyMap
+        Player.keyMap += 1
     }
 
     update(progress) {
@@ -35,10 +38,31 @@ class Player {
         ctx.fillRect(this.x - this.currentSize / 2, this.y - this.currentSize / 2, this.currentSize, this.currentSize)
     }
 
-    onKeyPress(key) {
+    onKeyPress(keyCode) {
+        console.log(keyMaps[this.keyMap][keyCode])
+        let key = keyMaps[this.keyMap][keyCode]
+        if (!key) return
         if (isKeyAllowed(this.currentKey, key)) {
             this.currentKey = key
         }
     }
 
 }
+
+
+const keyMaps = [
+    {
+        // Player1 (WASD)
+        68: 'right',
+        65: 'left',
+        87: 'up',
+        83: 'down',
+    },
+    {
+        // Player 2 (Arrows)
+        39: 'right',
+        37: 'left',
+        38: 'up',
+        40: 'down',
+    }
+]
