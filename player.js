@@ -123,5 +123,13 @@ const keyMaps = [
         38: 'up',
         40: 'down',
         32: 'noDraw',
+    },
+    {
+        // Player 3 (Numpad)
+        102: 'right',
+        100: 'left',
+        104: 'up',
+        98: 'down',
+        96: 'noDraw',
     }
 ]
