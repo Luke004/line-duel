@@ -50,20 +50,21 @@ class Player {
         // update position
         this.x += this.xDir
         this.y += this.yDir
-        this.el.style.left = this.x - this.currentSize  + "px";
-        this.el.style.top = this.y - this.currentSize  + "px";
+        this.el.style.left = this.x - this.currentSize + "px";
+        this.el.style.top = this.y - this.currentSize + "px";
 
     }
 
     draw(ctx) {
-        if(this.noDrawKeyPressed) return
-        // draw the player circle
-        ctx.beginPath()
-        ctx.arc(this.x - this.currentSize / 2, this.y - this.currentSize / 2, this.currentSize, 0, 2 * Math.PI)
-        ctx.fillStyle = this.color
-        ctx.fill()
-        ctx.strokeStyle = this.color
-        ctx.stroke()
+        if (!this.noDrawKeyPressed) {
+            // draw the player's trail
+            ctx.beginPath()
+            ctx.arc(this.x - this.currentSize / 2, this.y - this.currentSize / 2, this.currentSize, 0, 2 * Math.PI)
+            ctx.fillStyle = this.color
+            ctx.fill()
+            ctx.strokeStyle = this.color
+            ctx.stroke()
+        }
     }
 
     onKeyDown(keyCode) {
