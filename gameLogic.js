@@ -1,3 +1,18 @@
+function createPlayerElement(name, color){
+    // create player circle div
+    let div = document.createElement("div")
+    div.id = name
+    div.style.width = "9px"
+    div.style.height = "9px"
+    div.style.position = "absolute"
+    div.style.borderRadius = "20px"
+    div.style.backgroundColor = color
+    // add it to the container
+    let container = document.getElementById("container")
+    container.appendChild(div)
+    return div
+}
+
 function handleBorderCollisions(canvas, player) {
     if (player.x > canvas.width - player.currentSize / 2) {
         player.x = canvas.width - player.currentSize / 2
