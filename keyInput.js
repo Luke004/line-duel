@@ -1,15 +1,16 @@
 function keydown(event) {
     players.forEach((player) => { 
-        player.onKeyPress(event.keyCode)
+        player.onKeyDown(event.keyCode)
     });
 }
 
-/*
+
 function keyup(event) {
-    var key = keyMap[event.keyCode]
-    state.pressedKeys[key] = false
+    players.forEach((player) => { 
+        player.onKeyRelease(event.keyCode)
+    });
 }
-*/
+
 
 window.addEventListener("keydown", keydown, false)
-//window.addEventListener("keyup", keyup, false)
+window.addEventListener("keyup", keyup, false)

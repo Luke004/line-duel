@@ -1,126 +1,96 @@
 class Player {
 
     static defaultSpeed = 0.1
-    static defaultSize = 10
+    static defaultSize = 5
     static keyMap = 0
 
     constructor(name, color, startX, startY) {
+        // visuals
         this.name = name
-        this.x = startX
-        this.y = startY
-        this.currentKey = 'up'
+        this.color = color
+
+        // specs
         this.currentSpeed = Player.defaultSpeed
         this.currentSize = Player.defaultSize
-        this.currentDistanceTraveled = 0
-        this.color = color
+        this.rotateSpeed = 0.2
+
+        // movement
+        this.x = startX
+        this.y = startY
+        this.rotation = 0;
+        this.xDir = 0;
+        this.yDir = 0;
+
+        // keys
         this.keyMap = Player.keyMap
         Player.keyMap += 1
-
-        // keeping track of the player's trail rectangles
-        this.trail_rects = []
-        this.trail_rects_curr_idx = 0
-        this.current_trail_rect = {
-            startX: this.x,
-            startY: this.y
-        }
-        this.next_trail_rect = {
-            left: -10,
-            right: -10,
-            top: -10,
-            bottom: -10,
-        }
-        this.hasChangedDirection = false
-        this.player_rect = {}
+        this.leftKeyPressed = false;
+        this.rightKeyPressed = false;
     }
 
     update(progress) {
-        let movement = progress * this.currentSpeed
-        switch (this.currentKey) {
-            case 'up':
-                this.y -= movement
-                break
-            case 'down':
-                this.y += movement
-                break
-            case 'left':
-                this.x -= movement
-                break
-            case 'right':
-                this.x += movement
-                break
+        if (this.leftKeyPressed) {
+            this.rotation -= this.rotateSpeed * progress;
         }
-        this.currentDistanceTraveled += Math.abs(movement)
-
-        this.buildWayRectangles()
-
-        this.player_rect = {
-            top: this.y - this.currentSize / 2,
-            bottom: this.y + this.currentSize / 2,
-            left: this.x - this.currentSize / 2,
-            right: this.x + this.currentSize / 2
+        if (this.rightKeyPressed) {
+            this.rotation += this.rotateSpeed * progress;
         }
-        
+        // normalize rotation
+        this.rotation = this.rotation % 360;
+        if (this.rotation < 0) {
+            this.rotation += 360;
+        }
+        // update direction
+        this.xDir = Math.sin(this.rotation * Math.PI / 180);
+        this.yDir = -Math.cos(this.rotation * Math.PI / 180);
+        this.xDir *= progress * this.currentSpeed;
+        this.yDir *= progress * this.currentSpeed;
+        // update position
+        this.x += this.xDir;
+        this.y += this.yDir;
+
     }
 
     draw(ctx) {
+        // draw the player circle
+        ctx.beginPath();
+        ctx.arc(this.x - this.currentSize / 2, this.y - this.currentSize / 2, this.currentSize, 0, 2 * Math.PI)
         ctx.fillStyle = this.color
-        ctx.fillRect(this.x - this.currentSize / 2, this.y - this.currentSize / 2, this.currentSize, this.currentSize)
+        ctx.fill();
+        ctx.strokeStyle = this.color
+        ctx.stroke();
     }
 
-    onKeyPress(keyCode) {
+    onKeyDown(keyCode) {
         let key = keyMaps[this.keyMap][keyCode]
-        if (!key) return
-        if (isKeyAllowed(this.currentKey, key)) {
-            this.currentKey = key
-            this.onDirectionChange()
+
+        switch (key) {
+            case 'left':
+                this.leftKeyPressed = true;
+                break
+            case 'right':
+                this.rightKeyPressed = true;
+                break
         }
     }
 
-    /* Build the rectangles behind the player */
-    buildWayRectangles() {
-        // each 30 units update the rectangle trail
-        if (this.currentDistanceTraveled < 30) return
-        this.currentDistanceTraveled = 0
-        // each time the player changes its direction, increment 'trail_rects_curr_idx'
-        // in order to write to the next idx in the 'trail_rects' array
-        // if the player did not change the direction since last call, we simply write to the last idx
-        if (this.hasChangedDirection) {
-            this.hasChangedDirection = false
-            this.trail_rects_curr_idx++
+    onKeyRelease(keyCode) {
+        let key = keyMaps[this.keyMap][keyCode]
+        switch (key) {
+            case 'left':
+                this.leftKeyPressed = false;
+                break
+            case 'right':
+                this.rightKeyPressed = false;
+                break
         }
-
-        // add the rect previously created from last function call (with a delay of 'currentDistanceTraveled')
-        // this prevents the player intersecting with its own rectangle trail behind him because it is created too fast
-        this.trail_rects[this.trail_rects_curr_idx] = this.next_trail_rect
-
-        // create the rect of the current players location for the next method iteration
-        let rect = {
-            left: Math.min(this.current_trail_rect.startX, this.x) - this.currentSize / 2,
-            right: Math.max(this.current_trail_rect.startX, this.x) + this.currentSize / 2,
-            top: Math.min(this.current_trail_rect.startY, this.y) - this.currentSize / 2,
-            bottom: Math.max(this.current_trail_rect.startY, this.y) + this.currentSize / 2
-        }
-        // persist it
-        this.next_trail_rect = rect
     }
 
-    onDirectionChange() {
-        // set starting points for the next trail rect
-        this.current_trail_rect = {
-            startX: this.x,
-            startY: this.y
-        }
-        // notify 'buildWayRectangles' that the player has changed its direction
-        this.hasChangedDirection = true
+    /*
+    getPlayerCircle() {
+        return this.player_circle
     }
-
-    getTrailRects() {
-        return this.trail_rects
-    }
-
-    getPlayerRect() {
-        return this.player_rect
-    }
+    */
 
 }
 
