@@ -1,9 +1,9 @@
-function createPlayerElement(name, color){
+function createPlayerElement(name, color, size){
     // create player circle div
     let div = document.createElement("div")
     div.id = name
-    div.style.width = "9px"
-    div.style.height = "9px"
+    div.style.width = size * 0.95 + "px"
+    div.style.height = size * 0.95 + "px"
     div.style.position = "absolute"
     div.style.borderRadius = "20px"
     div.style.backgroundColor = color
@@ -14,20 +14,16 @@ function createPlayerElement(name, color){
 }
 
 function handleBorderCollisions(canvas, player) {
-    if (player.x > canvas.width - player.currentSize / 2) {
-        player.x = canvas.width - player.currentSize / 2
+    if (player.x > canvas.width - player.currentSize) {
         gameOver = true
     }
-    else if (player.x < 0 + player.currentSize / 2) {
-        player.x = 0 + player.currentSize / 2
+    else if (player.x < 0 + player.currentSize) {
         gameOver = true
     }
-    if (player.y > canvas.height - player.currentSize / 2) {
-        player.y = canvas.height - player.currentSize / 2
+    if (player.y > canvas.height - player.currentSize) {
         gameOver = true
     }
-    else if (player.y < 0 + player.currentSize / 2) {
-        player.y = 0 + player.currentSize / 2
+    else if (player.y < 0 + player.currentSize) {
         gameOver = true
     }
 }

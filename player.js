@@ -8,7 +8,6 @@ class Player {
         // visuals
         this.name = name
         this.color = color
-        this.el = createPlayerElement(name, color)
 
         // specs
         this.currentSpeed = Player.defaultSpeed
@@ -18,9 +17,10 @@ class Player {
         // movement
         this.x = startX
         this.y = startY
-        this.rotation = 0
+        this.rotation = 90
         this.xDir = 0
         this.yDir = 0
+        this.positions = []
 
         // keys
         this.keyMap = Player.keyMap
@@ -28,6 +28,9 @@ class Player {
         this.leftKeyPressed = false
         this.rightKeyPressed = false
         this.noDrawKeyPressed = false
+
+        // create the player html element
+        this.el = createPlayerElement(name, color, this.currentSize * 2)
     }
 
     update(progress) {
@@ -50,20 +53,30 @@ class Player {
         // update position
         this.x += this.xDir
         this.y += this.yDir
-        this.el.style.left = this.x - this.currentSize + "px";
-        this.el.style.top = this.y - this.currentSize + "px";
+        // set the player element position
+        // 0.92 is the scaling you need to do to convert from canvas to html-element
+        this.el.style.left = this.x - this.currentSize * 0.92 + "px";
+        this.el.style.top = this.y - this.currentSize * 0.92 + "px";
 
+        this.positions.push({
+            x: this.x,
+            y: this.y
+        })
     }
 
     draw(ctx) {
-        if (!this.noDrawKeyPressed) {
-            // draw the player's trail
-            ctx.beginPath()
-            ctx.arc(this.x - this.currentSize / 2, this.y - this.currentSize / 2, this.currentSize, 0, 2 * Math.PI)
-            ctx.fillStyle = this.color
-            ctx.fill()
-            ctx.strokeStyle = this.color
-            ctx.stroke()
+        if (this.positions.length > this.currentSize * 2) {
+            if (!this.noDrawKeyPressed) {
+                // draw the player's trail
+                ctx.beginPath()
+                let next = this.positions[0]
+                this.positions.splice(0, 1)
+                ctx.arc(next.x, next.y, this.currentSize, 0, 2 * Math.PI)
+                ctx.fillStyle = this.color
+                ctx.fill()
+                ctx.strokeStyle = this.color
+                ctx.stroke()
+            }
         }
     }
 
