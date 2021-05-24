@@ -58,13 +58,15 @@ class Player {
         this.el.style.left = this.x - this.currentSize * 0.92 + "px"
         this.el.style.top = this.y - this.currentSize * 0.92 + "px"
         // save prev positions to draw the trail
-        this.positions.push({
-            x: this.x,
-            y: this.y
-        })
+        if (!this.noDrawKeyPressed) {
+            this.positions.push({
+                x: this.x,
+                y: this.y
+            })
+        }
         // basic collision detection
         let data = ctx.getImageData(this.x, this.y, 1, 1).data
-        if(data[0] != 0) gameOver = true
+        if (data[0] != 0) gameOver = true
     }
 
     draw(ctx) {
@@ -95,6 +97,7 @@ class Player {
                 break
             case 'noDraw':
                 this.noDrawKeyPressed = true
+                this.positions = []
                 break
         }
     }
