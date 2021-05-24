@@ -33,7 +33,7 @@ class Player {
         this.el = createPlayerElement(name, color, this.currentSize * 2)
     }
 
-    update(progress) {
+    update(progress, ctx) {
         if (this.leftKeyPressed) {
             this.rotation -= this.rotateSpeed * progress
         }
@@ -55,13 +55,16 @@ class Player {
         this.y += this.yDir
         // set the player element position
         // 0.92 is the scaling you need to do to convert from canvas to html-element
-        this.el.style.left = this.x - this.currentSize * 0.92 + "px";
-        this.el.style.top = this.y - this.currentSize * 0.92 + "px";
-
+        this.el.style.left = this.x - this.currentSize * 0.92 + "px"
+        this.el.style.top = this.y - this.currentSize * 0.92 + "px"
+        // save prev positions to draw the trail
         this.positions.push({
             x: this.x,
             y: this.y
         })
+        // basic collision detection
+        let data = ctx.getImageData(this.x, this.y, 1, 1).data
+        if(data[0] != 0) gameOver = true
     }
 
     draw(ctx) {

@@ -13,7 +13,7 @@ function update(progress) {
 
 
     players.forEach((player) => {
-        player.update(progress)
+        player.update(progress, canvas.ctx)
         handleBorderCollisions(canvas, player)
     })
 
