@@ -64,23 +64,23 @@ class Player {
                 y: this.y
             })
         }
-        // basic collision detection
+        // data is the current pixel that is in the middle of the players arc
+        // this is now used to check for collisions with trails and items
         let data = ctx.getImageData(this.x, this.y, 1, 1).data
-        if (data[0] != 0) gameOver = true
+
+        checkTrailCollisions(ctx, this.x, this.y, data)
+
+        // item collision detection
+        checkItemCollisions(ctx, this, data)
     }
 
     draw(ctx) {
         if (this.positions.length > this.currentSize * 2) {
             if (!this.noDrawKeyPressed) {
                 // draw the player's trail
-                ctx.beginPath()
                 let next = this.positions[0]
                 this.positions.splice(0, 1)
-                ctx.arc(next.x, next.y, this.currentSize, 0, 2 * Math.PI)
-                ctx.fillStyle = this.color
-                ctx.fill()
-                ctx.strokeStyle = this.color
-                ctx.stroke()
+                drawCircle(ctx, next.x, next.y, this.currentSize, this.color, this.color)
             }
         }
     }

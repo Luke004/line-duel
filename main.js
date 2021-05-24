@@ -1,12 +1,16 @@
 var canvas = new Canvas(800, 600)
 
 var players = []
-
-players.push(new Player("Lukas", "red", canvas.width / 2 - 100, canvas.height / 2))
-//players.push(new Player("Lukas2", "blue", canvas.width / 2 + 100, canvas.height / 2))
-//players.push(new Player("Lukas3", "green", canvas.width / 2 + 150, canvas.height / 2))
-
 var gameOver = false
+
+function init() {
+    players.push(new Player("Lukas", "red", canvas.width / 2 - 100, canvas.height / 2))
+    //players.push(new Player("Lukas2", "blue", canvas.width / 2 + 100, canvas.height / 2))
+    //players.push(new Player("Lukas3", "green", canvas.width / 2 + 150, canvas.height / 2))
+
+    spawnRandomItems(canvas.ctx)
+}
+init()
 
 function update(progress) {
     if (gameOver) return
